@@ -1,0 +1,1 @@
+repadmin /replsum /bysrc /bydest /sort:delta > "c:\scheduled tasks\repadmin-output.txt"
