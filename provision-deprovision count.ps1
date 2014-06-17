@@ -2,7 +2,7 @@
 .SYNOPSIS
 will return the number of provisions and deprovisions in AD by the week and also provide a breakdown by opco
 .DESCRIPTION
-does not require special rights to run
+does not require special rights to run, requires active directory module for powershell
 #>
 $ErrorActionPreference = "Stop"
 ([System.Datetime] $date = $(get-date)) > $null
@@ -14,7 +14,7 @@ do
 {
     $checktime = (get-date).adddays($i)
     $endofweek = (get-date).adddays($i+7)
-    $users=Get-ADUser -Filter {whencreated -ge $checktime -and whencreated -le $endofweek} -Properties whencreated,extensionattribute3 -SearchBase "OU=User Accounts,OU=Users,OU=Accounts,DC=contoso,DC=com" | where {$_.Enabled -eq “True”} 
+    $users=Get-ADUser -Filter {whencreated -ge $checktime -and whencreated -le $endofweek} -Properties whencreated,extensionattribute3 | where {$_.Enabled -eq “True”} 
     "total active users created the week of " + $checktime.ToShortDateString() + " are " + $users.length
     $companycount=@{}
     foreach ($user in $users)
@@ -72,7 +72,7 @@ foreach ($companyid in $companies)
     }
     $companytable+=$tablerow
 }
-
+$companytable | ft -AutoSize
 
 
 #$users=Get-ADUser -Filter {whencreated -le $checktime} -Properties whencreated -SearchBase "OU=User Accounts,OU=Users,OU=Accounts,DC=contoso,DC=com" | where {$_.Enabled -eq “True”} 
